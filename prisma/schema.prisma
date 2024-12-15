@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      String    @id @default(uuid())
+  email                   String    @unique
+  password                String
+  firstName               String
+  lastName                String
+  role                    Role      @default(FREE_USER)
+  status                  Status    @default(PENDING)
+  emailVerified           DateTime?
+  verificationCode        String?
+  verificationCodeExpires DateTime?
+  verificationAttempts    Int       @default(0)
+  phoneNumber             String?
+  address                 String?
+  postalCode              String?
+  city                    String?
+  termsAccepted           Boolean
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  payments                Payment[]
+  reports                 Report[]
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  amount    Float
+  currency  String
+  status    String
+  userId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Question {
+  id         String           @id @default(uuid())
+  title      String
+  content    String
+  category   QuestionCategory
+  difficulty Int
+  imageUrl   String?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  reports    Report[]
+}
+
+model Report {
+  id          String   @id @default(uuid())
+  userId      String
+  questionId  String
+  description String
+  status      String
+  priority    String
+  createdAt   DateTime @default(now())
+  question    Question @relation(fields: [questionId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+enum QuestionCategory {
+  TRAFFIC_RULES
+  ENVIRONMENT
+  SIGNS
+  SAFETY
+  VEHICLE_KNOWLEDGE
+}
+
+enum Role {
+  FREE_USER
+  PREMIUM_USER
+  ADMIN
+}
+
+enum Status {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
