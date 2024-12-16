@@ -1,8 +1,7 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { AuthProvider } from "@/contexts/auth-context";
-import { ThemeProvider } from "@/contexts/ThemeContext";
+import { Providers } from "@/providers";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,11 +20,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="sv" suppressHydrationWarning className={`${inter.variable}`}>
+    <html lang="sv" suppressHydrationWarning className={inter.variable}>
       <body className="min-h-screen bg-background font-sans antialiased">
-        <AuthProvider>
-          <ThemeProvider>{children}</ThemeProvider>
-        </AuthProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
