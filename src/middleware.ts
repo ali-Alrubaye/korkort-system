@@ -2,9 +2,16 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyToken } from "@/lib/auth/jwt";
+import { withAuth } from "next-auth/middleware";
 
 // Definera cachade routes
 const CACHE_ROUTES = new Set(["/dashboard", "/profile", "/settings"]);
+
+export default withAuth({
+  pages: {
+    signIn: "/login",
+  },
+});
 
 export async function middleware(request: NextRequest) {
   try {
@@ -74,6 +81,14 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    // Skydda alla dashboard routes
+    "/dashboard/:path*",
+
+    // Skydda alla API routes förutom /api/auth
+    "/api/:path*",
+
+    // Exkludera /api/auth routes från skydd
+    "/((?!api/auth).*)",
     /*
      * Match alla routes utom:
      * - api routes som börjar med /api/public
