@@ -1,24 +1,32 @@
 // src/app/api/auth/send-verification/route.ts
 import { NextResponse } from "next/server";
 import { generateVerificationCode } from "../verify/route";
+import { sendVerificationEmail } from "@/lib/email";
+import { prisma } from "@/lib/db";
 
 export async function POST(request: Request) {
   try {
     const { email } = await request.json();
 
-    // Generera ny verifieringskod
-    const code = await generateVerificationCode(email);
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: { firstName: true },
+    });
 
-    // I utvecklingsmiljö, logga koden
-    if (process.env.NODE_ENV === "development") {
-      console.log("\n=== VERIFIERINGSKOD ===");
-      console.log(`Email: ${email}`);
-      console.log(`Kod: ${code}`);
-      console.log("=====================\n");
+    if (!user) {
+      return NextResponse.json(
+        { message: "Användaren hittades inte" },
+        { status: 404 }
+      );
     }
 
-    // TODO: Implementera e-postutskick med verifieringskod
-    // await sendVerificationEmail(email, code);
+    const code = await generateVerificationCode(email);
+
+    await sendVerificationEmail({
+      email,
+      code,
+      name: user.firstName,
+    });
 
     return NextResponse.json({
       message: "En ny verifieringskod har skickats",

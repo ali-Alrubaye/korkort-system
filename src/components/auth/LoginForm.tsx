@@ -9,7 +9,7 @@ import { z } from "zod";
 import { Loader2, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { FormInput } from "@/components/ui/FormInput";
 import Link from "next/link";
-import { useAuth } from "@/contexts/auth-context";
+import { signIn } from "next-auth/react";
 
 const loginSchema = z.object({
   email: z
@@ -24,7 +24,6 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
-  const { signIn, isLoading, error } = useAuth();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -51,14 +50,26 @@ export function LoginForm() {
     setLastAttemptEmail(data.email);
 
     try {
-      await signIn(data.email, data.password, data.rememberMe); // Ändra från login till signIn
-      router.push("/dashboard");
-      router.refresh(); // Uppdatera server-side state
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+        callbackUrl: "/dashboard", // Lagt till denna rad
+      });
+
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+
+      if (result?.url) {
+        // Lagt till denna kontroll
+        router.push(result.url); // Använd URL:en från resultatet
+        router.refresh();
+      }
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Ett oväntat fel uppstod";
 
-      // Hantera specifika felmeddelanden
       if (errorMessage.toLowerCase().includes("lösenord")) {
         setError("password", {
           type: "server",
@@ -201,7 +212,7 @@ export function LoginForm() {
         </div>
 
         <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-          Inte medlem?{" "}
+          Inte medlem?
           <Link
             href="/register"
             className="font-semibold text-blue-600 hover:text-blue-500 dark:text-blue-400"
