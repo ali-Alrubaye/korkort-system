@@ -3,8 +3,9 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyToken } from "@/lib/auth/jwt";
 import { withAuth } from "next-auth/middleware";
+import { Role } from "@prisma/client";
+import { canAccessRoute, isValidRole } from "@/lib/roles";
 
-// Definera cachade routes
 const CACHE_ROUTES = new Set(["/dashboard", "/profile", "/settings"]);
 
 export default withAuth({
@@ -17,7 +18,6 @@ export async function middleware(request: NextRequest) {
   try {
     const { pathname } = request.nextUrl;
 
-    // Hantera caching för statiska routes
     if (CACHE_ROUTES.has(pathname)) {
       const response = NextResponse.next();
       response.headers.set(
@@ -28,33 +28,42 @@ export async function middleware(request: NextRequest) {
     }
 
     const token = request.cookies.get("auth-token")?.value;
+    const session = request.cookies.get("next-auth.session-token")?.value;
+
     const isAuthRoute =
       pathname.startsWith("/login") ||
       pathname.startsWith("/register") ||
       pathname.startsWith("/verify");
 
-    // Om det är en API-route, låt den hantera sin egen auth
     if (pathname.startsWith("/api/")) {
       return NextResponse.next();
     }
 
-    // Optimerad auth-check
-    if (token) {
+    if (token || session) {
       try {
-        const decoded = await verifyToken(token);
+        const decoded = token ? await verifyToken(token) : null;
+        // Säkerställ att rollen är giltig
+        const roleStr = decoded?.role || "FREE_USER";
+        const userRole: Role = isValidRole(roleStr)
+          ? (roleStr as Role)
+          : Role.FREE_USER;
 
-        // Logga in-användare ska inte kunna besöka auth routes
+        // Kontrollera rollbaserad åtkomst
+        if (!canAccessRoute(pathname, userRole)) {
+          return NextResponse.redirect(new URL("/dashboard", request.url));
+        }
+
         if (isAuthRoute) {
           return NextResponse.redirect(new URL("/dashboard", request.url));
         }
 
-        // Lägg till user info i headers för backend
         const response = NextResponse.next();
-        response.headers.set("X-User-Id", decoded.id);
-        response.headers.set("X-User-Role", decoded.role);
+        if (decoded) {
+          response.headers.set("X-User-Id", decoded.id);
+          response.headers.set("X-User-Role", userRole);
+        }
         return response;
       } catch (error) {
-        // Ogiltig token - rensa cookie och omdirigera
         const response = NextResponse.redirect(new URL("/login", request.url));
         response.cookies.delete("auth-token");
         return response;
@@ -79,22 +88,12 @@ export async function middleware(request: NextRequest) {
   }
 }
 
+// Matcher configuration remains the same
 export const config = {
   matcher: [
-    // Skydda alla dashboard routes
     "/dashboard/:path*",
-
-    // Skydda alla API routes förutom /api/auth
     "/api/:path*",
-
-    // Exkludera /api/auth routes från skydd
     "/((?!api/auth).*)",
-    /*
-     * Match alla routes utom:
-     * - api routes som börjar med /api/public
-     * - Statiska filer (_next)
-     * - Favicon och andra root-filer
-     */
     "/((?!api/public|_next/static|_next/image|favicon.ico).*)",
   ],
 };

@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "@/providers";
+import NavigationMenu from "@/components/navigation/NavigationMenu";
 import "./globals.css";
 
 const inter = Inter({
@@ -22,7 +23,12 @@ export default function RootLayout({
   return (
     <html lang="sv" suppressHydrationWarning className={inter.variable}>
       <body className="min-h-screen bg-background font-sans antialiased">
-        <Providers>{children}</Providers>
+        <Providers>
+          <header className="sticky top-0 z-50 backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800">
+            <NavigationMenu />
+          </header>
+          {children}
+        </Providers>
       </body>
     </html>
   );
