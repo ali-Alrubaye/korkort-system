@@ -1,48 +1,7 @@
 // tailwind.config.ts
 import type { Config } from "tailwindcss";
 const defaultTheme = require("tailwindcss/defaultTheme");
-// tailwind.config.js
-const colors = {
-  primary: {
-    50: "#f0f9ff",
-    100: "#e0f2fe",
-    500: "#0ea5e9",
-    600: "#0284c7",
-    700: "#0369a1",
-  },
-  secondary: {
-    50: "#f8fafc",
-    100: "#f1f5f9",
-    500: "#64748b",
-    600: "#475569",
-    700: "#334155",
-  },
-  success: "#22c55e",
-  warning: "#f59e0b",
-  error: "#ef4444",
-};
-// Font-storlekar
-const typography = {
-  h1: "text-4xl md:text-5xl font-bold",
-  h2: "text-3xl md:text-4xl font-semibold",
-  h3: "text-2xl md:text-3xl font-semibold",
-  body: "text-base md:text-lg",
-  small: "text-sm",
-};
-// Containers
-const containers = {
-  page: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
-  section: "py-8 md:py-12 lg:py-16",
-  card: "p-4 md:p-6 rounded-lg shadow-md",
-};
-// Standard breakpoints
-const breakpoints = {
-  sm: "640px", // Mobil landskapsläge
-  md: "768px", // Tablets
-  lg: "1024px", // Laptops
-  xl: "1280px", // Desktop
-  "2xl": "1536px", // Stora skärmar
-};
+
 const config: Config = {
   darkMode: ["class"],
   content: [
@@ -51,7 +10,6 @@ const config: Config = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
-
   theme: {
     container: {
       center: true,
@@ -62,48 +20,66 @@ const config: Config = {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          50: "#f0f9ff",
+          100: "#e0f2fe",
+          500: "#0ea5e9",
+          600: "#0284c7",
+          700: "#0369a1",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          50: "#f8fafc",
+          100: "#f1f5f9",
+          500: "#64748b",
+          600: "#475569",
+          700: "#334155",
         },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        success: {
-          DEFAULT: "hsl(var(--success))",
-          foreground: "hsl(var(--success-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
+        success: "#22c55e",
+        warning: "#f59e0b",
+        error: "#ef4444",
+      },
+      typography: {
+        h1: "text-4xl md:text-5xl font-bold",
+        h2: "text-3xl md:text-4xl font-semibold",
+        h3: "text-2xl md:text-3xl font-semibold",
+        body: "text-base md:text-lg",
+        small: "text-sm",
+      },
+      containers: {
+        sm: "640px", // Mobil landskapsläge
+        md: "768px", // Tablets
+        lg: "1024px", // Laptops
+        xl: "1280px", // Desktop
+        "2xl": "1536px", // Stora skärmar
+      },
+      screens: {
+        xs: "475px",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1400px",
+      },
+      spacing: {
+        "layout-sm": "1rem",
+        "layout-md": "2rem",
+        "layout-lg": "4rem",
+        "section-sm": "2rem",
+        "section-md": "4rem",
+        "section-lg": "6rem",
+      },
+      fontSize: {
+        "heading-1": ["2.5rem", { lineHeight: "3rem", fontWeight: "700" }],
+        "heading-2": ["2rem", { lineHeight: "2.5rem", fontWeight: "600" }],
+        "heading-3": ["1.5rem", { lineHeight: "2rem", fontWeight: "600" }],
+        "body-large": ["1.125rem", { lineHeight: "1.75rem" }],
+        body: ["1rem", { lineHeight: "1.5rem" }],
+        small: ["0.875rem", { lineHeight: "1.25rem" }],
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        card: "0.5rem",
+        button: "0.375rem",
+        input: "0.375rem",
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...defaultTheme.fontFamily.sans],
