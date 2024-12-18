@@ -90,6 +90,16 @@ const config: Config = {
         "fade-in": "fadeIn 0.2s ease-in-out",
         "fade-out": "fadeOut 0.2s ease-in-out",
       },
+      transitionProperty: {
+        height: "height",
+        spacing: "margin, padding",
+      },
+      transitionTimingFunction: {
+        theme: "cubic-bezier(0.4, 0, 0.2, 1)",
+      },
+      transitionDuration: {
+        theme: "300ms",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
