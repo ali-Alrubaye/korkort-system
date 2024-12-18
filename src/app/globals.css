@@ -1,139 +1,85 @@
-/* src/app/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+:root {
+  /* Huvudfärger */
+  --primary: #0284c7;
+  --primary-light: #38bdf8;
+  --primary-dark: #0369a1;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+  /* Sekundära färger */
+  --secondary: #64748b;
+  --secondary-light: #94a3b8;
+  --secondary-dark: #475569;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+  /* Bakgrundsfärger */
+  --background: #ffffff;
+  --background-offset: #f8fafc;
 
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
+  /* Text färger */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+  /* Status färger */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --error: #ef4444;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+  /* Gränslinjer och inputs */
+  --border: #e2e8f0;
+  --border-focus: #0284c7;
+  --input: #f1f5f9;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+  /* Avrundade hörn */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+  /* Spacing */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
 
-    --success: 142.1 76.2% 36.3%;
-    --success-foreground: 355.7 100% 97.3%;
+  /* Skuggor */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+.dark {
+  --primary: #38bdf8;
+  --primary-light: #7dd3fc;
+  --primary-dark: #0284c7;
 
-    --radius: 0.5rem;
-  }
+  --secondary: #94a3b8;
+  --secondary-light: #cbd5e1;
+  --secondary-dark: #64748b;
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+  --background: #0f172a;
+  --background-offset: #1e293b;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --success: 142.1 70.6% 45.3%;
-    --success-foreground: 144.9 80.4% 10%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
-  }
+  --border: #1e293b;
+  --border-focus: #38bdf8;
+  --input: #1e293b;
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
-  h1 {
-    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
-  }
-  h2 {
-    @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0;
-  }
-  h3 {
-    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
-  }
-  p {
-    @apply leading-7 [&:not(:first-child)]:mt-6;
-  }
-  ul {
-    @apply my-6 ml-6 list-disc [&>li]:mt-2;
-  }
-  blockquote {
-    @apply mt-6 border-l-2 pl-6 italic;
+    @apply bg-background text-text-primary antialiased;
   }
 }
 
-/* Utility classes för applikationsspecifika komponenter */
 @layer components {
-  .nav-link {
-    @apply inline-flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors  
-    hover:bg-secondary hover:text-secondary-foreground  
-    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
-  }
-
-  .nav-link-active {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90;
-  }
-
-  .btn {
-    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors  
-    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50;
-  }
-
-  .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90;
-  }
-
-  .btn-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
-  }
-
-  .card {
-    @apply rounded-lg border bg-card text-card-foreground shadow-sm;
-  }
-
-  .input {
-    @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm   
-    ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium  
-    placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2   
-    focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 }
