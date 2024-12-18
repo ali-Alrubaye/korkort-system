@@ -1,7 +1,48 @@
 // tailwind.config.ts
 import type { Config } from "tailwindcss";
 const defaultTheme = require("tailwindcss/defaultTheme");
-
+// tailwind.config.js
+const colors = {
+  primary: {
+    50: "#f0f9ff",
+    100: "#e0f2fe",
+    500: "#0ea5e9",
+    600: "#0284c7",
+    700: "#0369a1",
+  },
+  secondary: {
+    50: "#f8fafc",
+    100: "#f1f5f9",
+    500: "#64748b",
+    600: "#475569",
+    700: "#334155",
+  },
+  success: "#22c55e",
+  warning: "#f59e0b",
+  error: "#ef4444",
+};
+// Font-storlekar
+const typography = {
+  h1: "text-4xl md:text-5xl font-bold",
+  h2: "text-3xl md:text-4xl font-semibold",
+  h3: "text-2xl md:text-3xl font-semibold",
+  body: "text-base md:text-lg",
+  small: "text-sm",
+};
+// Containers
+const containers = {
+  page: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+  section: "py-8 md:py-12 lg:py-16",
+  card: "p-4 md:p-6 rounded-lg shadow-md",
+};
+// Standard breakpoints
+const breakpoints = {
+  sm: "640px", // Mobil landskapsläge
+  md: "768px", // Tablets
+  lg: "1024px", // Laptops
+  xl: "1280px", // Desktop
+  "2xl": "1536px", // Stora skärmar
+};
 const config: Config = {
   darkMode: ["class"],
   content: [
@@ -10,6 +51,7 @@ const config: Config = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
+
   theme: {
     container: {
       center: true,
