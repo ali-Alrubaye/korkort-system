@@ -1,21 +1,27 @@
-/* // src/components/ui/FormInput/FormInput.module.css */
+/* src/components/ui/FormInput/FormInput.module.css */
 .formGroup {
-  position: relative;
-  transition: all 0.2s ease-in-out;
+  @apply relative space-y-1;
 }
 
 .input {
-  width: 100%;
-  transition: all 0.2s ease-in-out;
-}
-
-.input:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm   
+  ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium  
+  placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2   
+  focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .error {
+  @apply border-destructive text-destructive;
   animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.label {
+  @apply text-sm font-medium leading-none peer-disabled:cursor-not-allowed   
+  peer-disabled:opacity-70;
+}
+
+.errorMessage {
+  @apply text-sm font-medium text-destructive;
 }
 
 @keyframes shake {

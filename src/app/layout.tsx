@@ -21,13 +21,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="sv" suppressHydrationWarning className={inter.variable}>
-      <body className="min-h-screen bg-background font-sans antialiased">
+    <html lang="sv" suppressHydrationWarning>
+      <body
+        className={`min-h-screen bg-background font-sans antialiased ${inter.variable}`}
+      >
         <Providers>
-          <header className="sticky top-0 z-50 backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800">
-            <NavigationMenu />
-          </header>
-          {children}
+          <div className="relative flex min-h-screen flex-col">
+            <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+              <NavigationMenu />
+            </header>
+            <main className="flex-1">{children}</main>
+          </div>
         </Providers>
       </body>
     </html>
