@@ -1,10 +1,10 @@
 // src/types/auth.ts
-import "next-auth";
 import { Role, Status } from "@prisma/client";
-import { Session } from "next-auth";
+import { AdapterUser } from "next-auth/adapters";
+import { JWTPayload as JoseJWTPayload } from "jose";
 
-// Bas användare interface
-export interface User {
+// Bas interface för användardata
+export interface BaseUser {
   id: string;
   email: string;
   firstName: string | null;
@@ -13,53 +13,108 @@ export interface User {
   status: Status;
 }
 
-// JWT Payload interface
-export interface JWTPayload {
+// Auth User interface
+export interface AuthUser extends BaseUser {
+  password?: string;
+  emailVerified?: Date | null;
+}
+
+// Interface för adaptrar
+export interface CustomAdapterUser extends AdapterUser, BaseUser {}
+
+// JWT Payload interface som extends jose's JWTPayload
+export interface JWTPayload extends JoseJWTPayload {
   id: string;
   email: string;
   role: Role;
-  status: Status;
-  firstName: string | null;
-  lastName: string | null;
-  iat: number;
-  exp: number;
-  iss: string;
-  aud: string;
+  [key: string]: unknown; // Index signature för att matcha jose's JWTPayload
 }
 
-// NextAuth utökningar
+// Auth Error interface  OLd version
+// export interface AuthError extends Error {
+//   code?: string;
+//   statusCode?: number;
+// }
+
+// NextAuth modulutökningar för User old version
+// declare module "next-auth" {
+//   interface User extends BaseUser {}
+
+//   interface Session {
+//     user: BaseUser & {
+//       email: string;
+//     };
+//     expires: string;
+//   }
+// }
+
+// NextAuth modulutökningar för JWT old version
+// declare module "next-auth/jwt" {
+//   interface JWT extends Omit<BaseUser, "email"> {
+//     email?: string | null;
+//     iat?: number;
+//     exp?: number;
+//     jti?: string;
+//   }
+// }
+
+// Google OAuth profil
+export interface GoogleProfile {
+  email: string;
+  email_verified: boolean;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  locale: string;
+  sub: string;
+}
+
+// Session User type
+export interface SessionUser {
+  id: string;
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+  role: Role;
+  status: Status;
+}
+
+// Auth State type
+export interface AuthState {
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  user: SessionUser | null;
+  error: string | null;
+}
+
+// Auth Error types
+export interface AuthError {
+  message: string;
+  code?: string;
+  statusCode?: number;
+}
+
+// Login credentials type
+export interface LoginCredentials {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+}
+
+// NextAuth modulutökningar
 declare module "next-auth" {
-  interface User {
-    id: string;
-    email: string;
-    role: Role;
-    status: Status;
-    firstName: string | null;
-    lastName: string | null;
+  interface Session {
+    user: SessionUser;
   }
 
-  interface Session {
-    user: {
-      id: string;
-      email: string;
-      role: Role;
-      status: Status;
-      firstName: string | null;
-      lastName: string | null;
-    };
-  }
+  interface User extends SessionUser {}
 }
 
 declare module "next-auth/jwt" {
-  interface JWT extends Omit<JWTPayload, "iat" | "exp" | "iss" | "aud"> {
-    email: string;
-    role: Role;
-    status: Status;
-    firstName: string | null;
-    lastName: string | null;
+  interface JWT extends Omit<SessionUser, "emailVerified"> {
+    iat: number;
+    exp: number;
+    jti: string;
   }
 }
-
-// Helper types
-export type AuthUser = User;
-export type SessionUser = Session["user"];

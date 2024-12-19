@@ -1,3 +1,4 @@
+// src/app/page.tsx
 import {
   Link,
   BookOpen,
@@ -6,152 +7,200 @@ import {
   Clock,
   CheckCircle2,
   Trophy,
+  Users,
+  Star,
+  Award,
 } from "lucide-react";
 
-// src/app/page.tsx
+const stats = [
+  { value: "15,000+", label: "Användare" },
+  { value: "95%", label: "Godkända" },
+  { value: "1,000+", label: "Övningsfrågor" },
+  { value: "24/7", label: "Support" },
+];
+
+const testimonials = [
+  {
+    quote:
+      "Bästa sättet att förbereda sig för teoriprovet. Klarade det på första försöket!",
+    author: "Anna S.",
+    role: "Nybliven körkortsinnehavare",
+  },
+  {
+    quote: "Pedagogiskt upplägg och bra förklaringar. Rekommenderas starkt!",
+    author: "Marcus L.",
+    role: "Elev",
+  },
+];
+
 export default function Home() {
   return (
     <div className="space-y-20">
-      {/* Hero Section med förbättrad design */}
-      <section className="text-center space-y-8 py-12">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
-          Din väg till körkortet börjar här
-        </h1>
-        <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-          Vi hjälper dig att förbereda dig för teoriprovet med{" "}
-          <span className="text-blue-600 dark:text-blue-400 font-semibold">
-            smarta övningar
-          </span>
-          ,{" "}
-          <span className="text-indigo-600 dark:text-indigo-400 font-semibold">
-            personlig feedback
-          </span>{" "}
-          och{" "}
-          <span className="text-violet-600 dark:text-violet-400 font-semibold">
-            beprövade metoder
-          </span>
-          .
-        </p>
-        <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-          <Link
-            href="/teoriprov"
-            className="group inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-full text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            <BookOpen className="w-5 h-5 mr-2 transition-transform group-hover:scale-110" />
-            Börja öva nu
-          </Link>
-          <Link
-            href="/om-oss"
-            className="group inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-full text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-lg hover:shadow-xl ring-1 ring-gray-200 dark:ring-gray-700"
-          >
-            Läs mer om oss
-          </Link>
+      {/* Hero Section */}
+      <section className="container py-12 md:py-20">
+        <div className="max-w-[90rem] mx-auto text-center space-y-6">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold">
+            <span className="bg-gradient-to-r from-primary via-primary-dark to-primary-light bg-clip-text text-transparent">
+              Din väg till körkortet börjar här
+            </span>
+          </h1>
+          <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
+            Vi hjälper dig att förbereda dig för teoriprovet med{" "}
+            <span className="text-primary font-semibold">smarta övningar</span>,{" "}
+            <span className="text-primary-dark font-semibold">
+              personlig feedback
+            </span>{" "}
+            och{" "}
+            <span className="text-primary-light font-semibold">
+              beprövade metoder
+            </span>
+            .
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+            <Link
+              href="/teoriprov"
+              className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md bg-primary text-white hover:bg-primary-dark transition-colors shadow-sm hover:shadow"
+            >
+              <BookOpen className="w-5 h-5 mr-2" />
+              Börja öva nu
+            </Link>
+            <Link
+              href="/om-oss"
+              className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md bg-background-offset text-text-primary hover:bg-background border border-border hover:border-primary transition-colors shadow-sm hover:shadow"
+            >
+              Läs mer om oss
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Features Section med moderna kort */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {[
-          {
-            icon: Brain,
-            title: "Anpassad inlärning",
-            description:
-              "Vårt AI-drivna system anpassar sig efter dina behov och inlärningsstil.",
-          },
-          {
-            icon: Target,
-            title: "Omfattande frågebank",
-            description:
-              "Över 1000 uppdaterade frågor med detaljerade förklaringar.",
-          },
-          {
-            icon: Clock,
-            title: "Realistiska övningsprov",
-            description:
-              "Förbered dig med tidsbegränsade prov i verklig miljö.",
-          },
-        ].map(({ icon: Icon, title, description }) => (
-          <div
-            key={title}
-            className="group relative overflow-hidden rounded-2xl transition-all duration-200 hover:shadow-2xl"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-100/80 to-indigo-100/80 dark:from-blue-900/20 dark:to-indigo-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-            <div className="relative space-y-4 p-8">
-              <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center transform transition-transform group-hover:scale-110">
-                <Icon className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                {title}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                {description}
-              </p>
-            </div>
-          </div>
-        ))}
-      </section>
-
-      {/* Progress Section med modernare design */}
-      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-12">
-        <div className="relative z-10 max-w-3xl mx-auto space-y-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
-            Din framgång är vårt mål
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {[
-              {
-                icon: CheckCircle2,
-                title: "Följ din utveckling",
-                description:
-                  "Se din framgång över tid och fokusera på förbättringsområden.",
-              },
-              {
-                icon: Trophy,
-                title: "Bli redo för provet",
-                description:
-                  "Maximera dina chanser att klara teoriprovet på första försöket.",
-              },
-            ].map(({ icon: Icon, title, description }) => (
-              <div key={title} className="flex items-start space-x-4 group">
-                <div className="rounded-lg p-2 bg-blue-100 dark:bg-blue-900/30 transform transition-transform group-hover:scale-110">
-                  <Icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+      {/* Features Grid */}
+      <section className="container">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {[
+            {
+              icon: Brain,
+              title: "Anpassad inlärning",
+              description: "AI-driven personlig inlärningsplan",
+            },
+            {
+              icon: Target,
+              title: "Omfattande material",
+              description: "Över 1000 uppdaterade övningsfrågor",
+            },
+            {
+              icon: Clock,
+              title: "Effektiv övning",
+              description: "Optimerad för snabb inlärning",
+            },
+          ].map((feature) => (
+            <div
+              key={feature.title}
+              className="group relative p-6 rounded-lg bg-background-offset border border-border hover:border-primary transition-colors"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="shrink-0 p-2 rounded-md bg-primary/10 text-primary">
+                  <feature.icon className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-900 dark:text-white">
-                    {title}
+                  <h3 className="text-lg font-semibold text-text-primary">
+                    {feature.title}
                   </h3>
-                  <p className="mt-2 text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {description}
+                  <p className="mt-2 text-text-secondary">
+                    {feature.description}
                   </p>
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="container">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          {[
+            { label: "Aktiva användare", value: "15,000+" },
+            { label: "Godkända elever", value: "95%" },
+            { label: "Övningsfrågor", value: "1,000+" },
+            { label: "Support", value: "24/7" },
+          ].map((stat) => (
+            <div
+              key={stat.label}
+              className="p-6 rounded-lg bg-background-offset border border-border"
+            >
+              <p className="text-2xl md:text-3xl font-bold text-primary">
+                {stat.value}
+              </p>
+              <p className="mt-2 text-text-secondary">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Progress Section */}
+      <section className="container">
+        <div className="rounded-lg border border-border bg-background-offset p-8 md:p-12">
+          <div className="max-w-3xl mx-auto space-y-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-center text-text-primary">
+              Din framgång är vårt mål
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {[
+                {
+                  icon: CheckCircle2,
+                  title: "Följ din utveckling",
+                  description: "Se din framgång i realtid",
+                },
+                {
+                  icon: Trophy,
+                  title: "Nå dina mål",
+                  description: "Klara provet på första försöket",
+                },
+              ].map((item) => (
+                <div key={item.title} className="flex items-start space-x-4">
+                  <div className="shrink-0 p-2 rounded-md bg-primary/10 text-primary">
+                    <item.icon className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-text-primary">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1 text-text-secondary">
+                      {item.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section med förbättrad design */}
-      <section className="text-center space-y-8 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-900/50 rounded-2xl p-12">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-          Redo att börja din resa?
-        </h2>
-        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          Skapa ett konto idag och få tillgång till alla våra övningar och
-          studiematerial. Din framgång börjar här.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-          <Link
-            href="/register"
-            className="group inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-full text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            Skapa konto
-          </Link>
-          <Link
-            href="/login"
-            className="group inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-full text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-lg hover:shadow-xl ring-1 ring-gray-200 dark:ring-gray-700"
-          >
-            Logga in
-          </Link>
+      {/* CTA Section */}
+      <section className="container">
+        <div className="rounded-lg border border-border bg-background-offset p-8 md:p-12 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-text-primary">
+            Redo att börja din resa?
+          </h2>
+          <p className="mt-4 text-lg text-text-secondary max-w-2xl mx-auto">
+            Skapa ett konto idag och få tillgång till alla våra övningar och
+            studiematerial.
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/register"
+              className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md bg-primary text-white hover:bg-primary-dark transition-colors shadow-sm hover:shadow"
+            >
+              Skapa konto
+            </Link>
+            <Link
+              href="/login"
+              className="inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-md bg-background text-text-primary hover:bg-background-offset border border-border hover:border-primary transition-colors shadow-sm hover:shadow"
+            >
+              Logga in
+            </Link>
+          </div>
         </div>
       </section>
     </div>

@@ -153,14 +153,6 @@ export default function RegisterForm() {
           required
           autoComplete="new-password"
         />
-        <button
-          type="button"
-          onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-3 top-9 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-          aria-label={showPassword ? "Dölj lösenord" : "Visa lösenord"}
-        >
-          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-        </button>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

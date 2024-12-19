@@ -1,55 +1,74 @@
 // src/lib/auth/jwt.ts
 import { SignJWT, jwtVerify } from "jose";
-import { User } from "@/types/auth";
+import { AuthUser, JWTPayload } from "@/types/auth";
+import { Role } from "@prisma/client";
 
 const SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "your-secret-key"
+  process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET!
 );
 
-const ISSUER = "your-app-name";
-const AUDIENCE = "your-app-name";
+const JWT_CONFIG = {
+  issuer: "your-app-name",
+  audience: "your-app-name",
+  expiresIn: "24h",
+} as const;
 
-export interface JWTPayload {
-  id: string;
-  email: string;
-  role: string;
-  iat: number;
-  exp: number;
-  iss: string;
-  aud: string;
-}
+export async function createToken(user: Partial<AuthUser>): Promise<string> {
+  if (!user.id || !user.email || !user.role) {
+    throw new Error("Ogiltiga användaruppgifter för token-generering");
+  }
 
-export async function createToken(user: Partial<User>): Promise<string> {
   const iat = Math.floor(Date.now() / 1000);
-  const exp = iat + 24 * 60 * 60; // 24 hours
+  const exp = iat + 24 * 60 * 60;
 
-  return new SignJWT({
+  const payload: JWTPayload = {
     id: user.id,
     email: user.email,
     role: user.role,
-  })
+    iat,
+    exp,
+    iss: JWT_CONFIG.issuer,
+    aud: JWT_CONFIG.audience,
+  };
+
+  return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt(iat)
     .setExpirationTime(exp)
-    .setIssuer(ISSUER)
-    .setAudience(AUDIENCE)
+    .setIssuer(JWT_CONFIG.issuer)
+    .setAudience(JWT_CONFIG.audience)
     .sign(SECRET);
 }
 
-export async function verifyToken(token: string): Promise<JWTPayload> {
+export async function verifyToken<T = JWTPayload>(token: string): Promise<T> {
   try {
     const { payload } = await jwtVerify(token, SECRET, {
-      issuer: ISSUER,
-      audience: AUDIENCE,
+      issuer: JWT_CONFIG.issuer,
+      audience: JWT_CONFIG.audience,
     });
 
-    return payload as unknown as JWTPayload;
+    if (!isValidJWTPayload(payload)) {
+      throw new Error("Ogiltig token payload");
+    }
+
+    return payload as T;
   } catch (error) {
-    throw new Error("Invalid token");
+    throw new Error("Ogiltig token");
   }
 }
 
-export function isTokenExpired(exp: number): boolean {
-  const currentTime = Math.floor(Date.now() / 1000);
-  return currentTime >= exp;
+// Hjälpfunktion för att validera token-payload
+export function isValidJWTPayload(payload: unknown): payload is JWTPayload {
+  const p = payload as JWTPayload;
+  return !!(
+    p &&
+    typeof p.id === "string" &&
+    typeof p.email === "string" &&
+    typeof p.role === "string"
+  );
+}
+
+// Type guard för att verifiera Role enum
+export function isValidRole(role: unknown): role is Role {
+  return typeof role === "string" && Object.values(Role).includes(role as Role);
 }

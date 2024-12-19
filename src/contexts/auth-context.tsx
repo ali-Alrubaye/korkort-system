@@ -1,28 +1,27 @@
-// src/contexts/auth-context.tsx
 "use client";
 
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, ReactNode, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession, signIn, signOut } from "next-auth/react";
+import {
+  useSession,
+  signIn as nextAuthSignIn,
+  signOut as nextAuthSignOut,
+} from "next-auth/react";
 import { Role, Status } from "@prisma/client";
-import { SessionUser } from "@/types/auth";
+import {
+  SessionUser,
+  AuthState,
+  AuthError,
+  LoginCredentials,
+} from "@/types/auth";
 import { hasPermission, Permission, isRoleAtLeast } from "@/lib/roles";
 
-interface AuthContextType {
-  user: SessionUser | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  error: Error | null;
-  signIn: (
-    email: string,
-    password: string,
-    rememberMe: boolean
-  ) => Promise<void>;
+interface AuthContextType extends AuthState {
+  signIn: (credentials: LoginCredentials) => Promise<void>;
   signOut: () => Promise<void>;
   clearError: () => void;
   hasPermission: (permission: Permission) => boolean;
   isAtLeastRole: (role: Role) => boolean;
-  status: Status | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,20 +35,23 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { data: session, status: sessionStatus } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
-  const clearError = () => {
-    // Implementera felhantering vid behov
-  };
+  const isLoading = status === "loading";
+  const isAuthenticated = status === "authenticated";
 
-  const handleSignIn = async (
-    email: string,
-    password: string,
-    rememberMe: boolean
-  ) => {
+  const clearError = () => setError(null);
+
+  const handleSignIn = async ({
+    email,
+    password,
+    rememberMe,
+  }: LoginCredentials) => {
     try {
-      const result = await signIn("credentials", {
+      clearError();
+      const result = await nextAuthSignIn("credentials", {
         email,
         password,
         redirect: false,
@@ -57,6 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (result?.error) {
+        setError(result.error);
         throw new Error(result.error);
       }
 
@@ -64,18 +67,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         router.push(result.url);
       }
     } catch (error) {
-      throw error instanceof Error
-        ? error
-        : new Error("Inloggningen misslyckades");
+      const message =
+        error instanceof Error ? error.message : "Inloggningen misslyckades";
+      setError(message);
+      throw new Error(message);
     }
   };
 
   const handleSignOut = async () => {
     try {
-      await signOut({ redirect: false });
+      clearError();
+      await nextAuthSignOut({ redirect: false });
       router.push("/login");
     } catch (error) {
-      throw new Error("Utloggningen misslyckades");
+      const message = "Utloggningen misslyckades";
+      setError(message);
+      throw new Error(message);
     }
   };
 
@@ -91,15 +98,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value: AuthContextType = {
     user: session?.user ?? null,
-    isLoading: sessionStatus === "loading",
-    isAuthenticated: sessionStatus === "authenticated",
-    error: null,
+    isLoading,
+    isAuthenticated,
+    error,
     signIn: handleSignIn,
     signOut: handleSignOut,
     clearError,
     hasPermission: checkPermission,
     isAtLeastRole: checkRole,
-    status: session?.user?.status ?? null,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

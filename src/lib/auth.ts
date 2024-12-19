@@ -1,17 +1,17 @@
-// src/lib/auth.ts
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
 import { prisma } from "@/lib/db";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { CustomAdapterUser } from "@/types/auth";
 import bcrypt from "bcryptjs";
 import { Adapter } from "next-auth/adapters";
 
-// Skapa en anpassad adapter som extends PrismaAdapter
-const customPrismaAdapter = (): Adapter => {
-  const adapter = PrismaAdapter(prisma) as Adapter;
+// Anpassad PrismaAdapter
+const createCustomAdapter = (): Adapter => {
+  const prismaAdapter = PrismaAdapter(prisma) as Adapter;
 
   return {
-    ...adapter,
+    ...prismaAdapter,
     createUser: async (data: any) => {
       const user = await prisma.user.create({
         data: {
@@ -20,6 +20,7 @@ const customPrismaAdapter = (): Adapter => {
           status: "PENDING",
         },
       });
+
       return {
         ...user,
         id: user.id,
@@ -29,13 +30,15 @@ const customPrismaAdapter = (): Adapter => {
         status: user.status,
         firstName: user.firstName,
         lastName: user.lastName,
-      };
+      } as CustomAdapterUser;
     },
-    getUser: async (id) => {
+    getUser: async (id: string) => {
       const user = await prisma.user.findUnique({
         where: { id },
       });
+
       if (!user) return null;
+
       return {
         ...user,
         id: user.id,
@@ -45,13 +48,13 @@ const customPrismaAdapter = (): Adapter => {
         status: user.status,
         firstName: user.firstName,
         lastName: user.lastName,
-      };
+      } as CustomAdapterUser;
     },
   };
 };
 
 export const authOptions: NextAuthOptions = {
-  adapter: customPrismaAdapter(),
+  adapter: createCustomAdapter(),
   session: {
     strategy: "jwt",
   },
@@ -108,7 +111,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.email = user.email;
+        token.email = user.email || token.email; // Behåll existerande email om user.email saknas
         token.role = user.role;
         token.status = user.status;
         token.firstName = user.firstName;
@@ -119,6 +122,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
+        session.user.email = token.email || session.user.email; // Behåll existerande email om token.email saknas
         session.user.role = token.role;
         session.user.status = token.status;
         session.user.firstName = token.firstName;

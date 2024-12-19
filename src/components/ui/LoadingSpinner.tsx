@@ -1,12 +1,24 @@
-// src/components/ui/LoadingSpinner.tsx
-export function LoadingSpinner({
-  className = "h-5 w-5",
-}: {
+type SpinnerSize = "sm" | "md" | "lg" | "xl";
+
+interface LoadingSpinnerProps {
+  size?: SpinnerSize;
   className?: string;
-}) {
+}
+
+const sizeClasses: Record<SpinnerSize, string> = {
+  sm: "h-4 w-4",
+  md: "h-6 w-6",
+  lg: "h-8 w-8",
+  xl: "h-12 w-12",
+};
+
+export function LoadingSpinner({
+  size = "md",
+  className = "",
+}: LoadingSpinnerProps) {
   return (
     <svg
-      className={`animate-spin ${className}`}
+      className={`animate-spin ${sizeClasses[size]} ${className}`}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
